@@ -31,6 +31,7 @@ class ViewController: UIViewController {
     public var allAlbums = [Album]()
     public var currentAlbumData : (titles:[String], values:[String])?
     public var currentAlbumIndex = 0
+    var undoStack: [(Album, Int)] = []
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -43,16 +44,30 @@ class ViewController: UIViewController {
         
         // 3
         // the uitableview that presents the album data
-        dataTable.delegate = self as! UITableViewDelegate
-        dataTable.dataSource = self as! UITableViewDataSource
+        dataTable.delegate = self as UITableViewDelegate
+        dataTable.dataSource = self as UITableViewDataSource
         dataTable.backgroundView = nil
         view.addSubview(dataTable!)
         
         self.showDataForAlbum(albumIndex: currentAlbumIndex)
         
+        loadPreviousState()
         scroller.delegate = self
         reloadScroller()
+        
+//        let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action:#selector(undoAction))
+//        undoButton.isEnabled = false;
+//        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target:nil, action:nil)
+//        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target:self, action:#selector(deleteAlbum))
+//        let toolbarButtonItems = [undoButton, space, trashButton]
+//        toolbar.setItems(toolbarButtonItems, animated: true)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(saveCurrentState), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
 	}
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     func showDataForAlbum(albumIndex: Int) {
         // defensive code: make sure the requested index is lower than the amount of albums
@@ -83,6 +98,67 @@ class ViewController: UIViewController {
         scroller.reload()
         showDataForAlbum(albumIndex: currentAlbumIndex)
     }
+    
+    //MARK: Memento Pattern
+    func saveCurrentState() {
+        // When the user leaves the app and then comes back again, he wants it to be in the exact same state
+        // he left it. In order to do this we need to save the currently displayed album.
+        // Since it's only one piece of information we can use NSUserDefaults.
+        UserDefaults.standard.set(currentAlbumIndex, forKey: "currentAlbumIndex")
+        LibraryAPI.sharedInstance.saveAlbums()
+    }
+    
+    func loadPreviousState() {
+        currentAlbumIndex = UserDefaults.standard.integer(forKey: "currentAlbumIndex")
+        showDataForAlbum(albumIndex: currentAlbumIndex)
+    }
+    
+    func initialViewIndex(scroller: HorizontalScroller) -> Int {
+        return currentAlbumIndex
+    }
+    
+    func addAlbumAtIndex(album: Album,index: Int) {
+        LibraryAPI.sharedInstance.addAlbum(album: album, index: index)
+        currentAlbumIndex = index
+        reloadScroller()
+    }
+    
+    func deleteAlbum() {
+        //1
+        let deletedAlbum : Album = allAlbums[currentAlbumIndex]
+        //2
+        let undoAction = (deletedAlbum, currentAlbumIndex)
+        undoStack.insert(undoAction, at: 0)
+        //3
+        LibraryAPI.sharedInstance.deleteAlbum(index: currentAlbumIndex)
+        reloadScroller()
+        //4
+        let barButtonItems = toolbar.items!
+        let undoButton : UIBarButtonItem = barButtonItems[0]
+        undoButton.isEnabled = true
+        //5
+        if (allAlbums.count == 0) {
+            let trashButton : UIBarButtonItem = barButtonItems[2]
+            trashButton.isEnabled = false
+        }
+    }
+    
+    func undoAction() {
+        let barButtonItems = toolbar.items!
+        //1
+        if undoStack.count > 0 {
+            let (deletedAlbum, index) = undoStack.remove(at: 0)
+            addAlbumAtIndex(album: deletedAlbum, index: index)
+        }
+        //2
+        if undoStack.count == 0 {
+            let undoButton : UIBarButtonItem = barButtonItems[0]
+            undoButton.isEnabled = false
+        }
+        //3
+        let trashButton : UIBarButtonItem = barButtonItems[2]
+        trashButton.isEnabled = true
+    }
 }
 
 
@@ -96,7 +172,7 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! UITableViewCell
+        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) 
         if let albumData = currentAlbumData {
             cell.textLabel!.text = albumData.titles[indexPath.row]
             cell.detailTextLabel!.text = albumData.values[indexPath.row]

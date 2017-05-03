@@ -60,7 +60,7 @@ class HorizontalScroller: UIView {
         self.addConstraint(NSLayoutConstraint(item: scroller, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0))
         
         //4
-        let tapRecognizer = UITapGestureRecognizer(target: self, action:Selector("scrollerTapped:"))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollerTapped))
         scroller.addGestureRecognizer(tapRecognizer)
     }
     
@@ -68,7 +68,7 @@ class HorizontalScroller: UIView {
         let location = gesture.location(in: gesture.view)
         if let delegate = delegate {
             for index in 0..<delegate.numberOfViewsForHorizontalScroller(scroller: self) {
-                let view = scroller.subviews[index] as! UIView
+                let view = scroller.subviews[index] 
                 if view.frame.contains(location) {
                     delegate.horizontalScrollerClickedViewAtIndex(scroller: self, index: index)
                     scroller.setContentOffset(CGPoint(x: view.frame.origin.x - self.frame.size.width/2 + view.frame.size.width/2, y: 0), animated:true)

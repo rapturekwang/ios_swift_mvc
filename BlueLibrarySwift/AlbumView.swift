@@ -21,6 +21,26 @@ class AlbumView: UIView {
     init(frame: CGRect, albumCover: String) {
         super.init(frame: frame)
         commonInit()
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BLDownloadImageNotification"), object: self, userInfo: ["imageView":coverImage, "coverUrl" : albumCover])
+        
+        coverImage.addObserver(self, forKeyPath: "image", context: nil)
+    }
+    
+    deinit {
+        coverImage.removeObserver(self, forKeyPath: "image")
+    }
+    
+//    override func observeValue(forKeyPath keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
+//        if keyPath == "image" {
+//            indicator.stopAnimating()
+//        }
+//    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "image" {
+            indicator.stopAnimating()
+        }
     }
     
     func commonInit() {
