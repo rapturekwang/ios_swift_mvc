@@ -43,16 +43,16 @@ class LibraryAPI: NSObject {
     
     func addAlbum(album: Album, index: Int) {
         persistencyManager.addAlbum(album: album, index: index)
-        if isOnline {
-            httpClient.postRequest("/api/addAlbum", body: album.description)
-        }
+//        if isOnline {
+//            httpClient.postRequest("/api/addAlbum", body: album.description)
+//        }
     }
     
     func deleteAlbum(index: Int) {
         persistencyManager.deleteAlbumAtIndex(index: index)
-        if isOnline {
-            httpClient.postRequest("/api/deleteAlbum", body: "\(index)")
-        }
+//        if isOnline {
+//            httpClient.postRequest("/api/deleteAlbum", body: "\(index)")
+//        }
     }
     
     func saveAlbums() {

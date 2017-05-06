@@ -72,6 +72,12 @@ class PersistencyManager: NSObject {
         }
     }
     
+    func saveAlbums() {
+        let filename = URL(fileURLWithPath:NSHomeDirectory()).appendingPathComponent("/Documents/albums.bin")
+        let data = NSKeyedArchiver.archivedData(withRootObject: albums)
+        try! data.write(to: filename, options: .atomic)
+    }
+    
     func deleteAlbumAtIndex(index: Int) {
         albums.remove(at: index)
     }
@@ -89,11 +95,5 @@ class PersistencyManager: NSObject {
         } else {
             return nil
         }
-    }
-    
-    func saveAlbums() {
-        let filename = URL(fileURLWithPath:NSHomeDirectory()).appendingPathComponent("/Documents/albums.bin")
-        let data = NSKeyedArchiver.archivedData(withRootObject: albums)
-        try! data.write(to: filename, options: .atomic)
     }
 }

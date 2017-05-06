@@ -128,13 +128,13 @@ class HorizontalScroller: UIView {
 }
 
 extension HorizontalScroller: UIScrollViewDelegate {
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             centerCurrentView()
         }
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         centerCurrentView()
     }
 }
