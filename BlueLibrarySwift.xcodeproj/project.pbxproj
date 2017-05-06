@@ -101,7 +101,6 @@
 				101DD6D31A052EDE00161F0D /* LaunchScreen.xib */,
 				101DD6C81A052EDE00161F0D /* Supporting Files */,
 				2E37C7051EB71F16008CF433 /* AlbumExtensions.swift */,
-				2E37C7071EB852E3008CF433 /* HorizontalScroller.swift */,
 			);
 			path = BlueLibrarySwift;
 			sourceTree = "<group>";
@@ -153,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				2E37C6FB1EB71177008CF433 /* AlbumView.swift */,
+				2E37C7071EB852E3008CF433 /* HorizontalScroller.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";

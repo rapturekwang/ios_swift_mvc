@@ -31,12 +31,6 @@ class AlbumView: UIView {
         coverImage.removeObserver(self, forKeyPath: "image")
     }
     
-//    override func observeValue(forKeyPath keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
-//        if keyPath == "image" {
-//            indicator.stopAnimating()
-//        }
-//    }
-    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
             indicator.stopAnimating()

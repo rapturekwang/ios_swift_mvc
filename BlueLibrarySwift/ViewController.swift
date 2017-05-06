@@ -55,12 +55,12 @@ class ViewController: UIViewController {
         scroller.delegate = self
         reloadScroller()
         
-//        let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action:#selector(undoAction))
-//        undoButton.isEnabled = false;
-//        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target:nil, action:nil)
-//        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target:self, action:#selector(deleteAlbum))
-//        let toolbarButtonItems = [undoButton, space, trashButton]
-//        toolbar.setItems(toolbarButtonItems, animated: true)
+        let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action:#selector(undoAction))
+        undoButton.isEnabled = false;
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target:nil, action:nil)
+        let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target:self, action:#selector(deleteAlbum))
+        let toolbarButtonItems = [undoButton, space, trashButton]
+        toolbar.setItems(toolbarButtonItems, animated: true)
         
         NotificationCenter.default.addObserver(self, selector: #selector(saveCurrentState), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
 	}
