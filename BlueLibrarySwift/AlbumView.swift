@@ -21,10 +21,9 @@ class AlbumView: UIView {
     init(frame: CGRect, albumCover: String) {
         super.init(frame: frame)
         commonInit()
+        coverImage.addObserver(self, forKeyPath: "image", context: nil)
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BLDownloadImageNotification"), object: self, userInfo: ["imageView":coverImage, "coverUrl" : albumCover])
-        
-        coverImage.addObserver(self, forKeyPath: "image", context: nil)
     }
     
     deinit {

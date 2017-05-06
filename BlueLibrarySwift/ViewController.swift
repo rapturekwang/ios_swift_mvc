@@ -44,8 +44,8 @@ class ViewController: UIViewController {
         
         // 3
         // the uitableview that presents the album data
-        dataTable.delegate = self as UITableViewDelegate
-        dataTable.dataSource = self as UITableViewDataSource
+        dataTable.delegate = self
+        dataTable.dataSource = self
         dataTable.backgroundView = nil
         view.addSubview(dataTable!)
         
